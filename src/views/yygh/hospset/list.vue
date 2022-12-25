@@ -44,6 +44,10 @@
           </router-link>
           <el-button type="danger" size="mini" icon="el-icon-delete"
             @click="removeDataById(scope.row.id)">删除</el-button>
+          <el-button v-if="scope.row.status == 1" type="primary" size="mini" icon="el-icon-delete"
+            @click="lockHostSet(scope.row.id, 0)">锁定</el-button>
+          <el-button v-if="scope.row.status == 0" type="danger" size="mini" icon="el-icon-delete"
+            @click="lockHostSet(scope.row.id, 1)">取消锁定</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -76,6 +80,18 @@ export default {
     this.fetchData()
   },
   methods: {
+    //锁定和解锁
+    lockHostSet(id, status) {
+      hospitalset.lockHostSet(id, status).then(response => {
+        //刷新
+        this.fetchData()
+      }).catch(()=>{
+        this.$message({
+          type: 'error',
+          message: '操作失败，请刷新后操作'
+        })
+      })
+    },
     //批量删除
     removeRows() {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
