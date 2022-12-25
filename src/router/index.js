@@ -74,16 +74,28 @@ export const constantRoutes = [
         path: 'create',
         name: 'HospSetCreate',
         component: () => import('@/views/yygh/hospset/form'),
-        meta: { title: '添加医院设置', icon: 'tree' }
+        meta: { title: '医院设置添加', icon: 'tree' }
       },
       {
         path: 'edit/:id',
         name: 'HospSetEdit',
         component: () => import('@/views/yygh/hospset/form'),
-        meta: { title: '编辑医院设置', noCache: true },
+        meta: { title: '医院设置编辑', noCache: true },
         hidden: true
       }
     ]
+  },
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/form',
+    children: [{
+      path: 'form',
+      name: 'Form',
+      component: () => import('@/views/form/index'),
+      meta: { title: 'Form', icon: 'form' }
+    }]
   },
 
   // 404 page must be placed at the end !!!
