@@ -42,5 +42,12 @@ export default {
       method: 'delete',
       data: ids
     })
+  },
+  //锁定和解锁
+  lockHostSet(id,status){
+    return request({
+      url: `${API}/lockHospitalSet/${id}/${status}`,
+      method: 'put'
+    })
   }
 }
