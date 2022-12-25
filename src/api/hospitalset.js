@@ -16,14 +16,14 @@ export default {
       method: 'delete'
     })
   },
-  save(hospitalSet){
+  save(hospitalSet) {
     return request({
       url: `${API}/saveHospSet`,
       method: 'post',
       data: hospitalSet
     })
   },
-  getHospitalSetById(id){
+  getHospitalSetById(id) {
     return request({
       url: `${API}/getHospSet/${id}`,
       method: 'get'
@@ -31,9 +31,16 @@ export default {
   },
   updateById(hospitalSet) {
     return request({
-        url: `${API}/updateHospSet`,
-        method: 'put',
-        data: hospitalSet
+      url: `${API}/updateHospSet`,
+      method: 'put',
+      data: hospitalSet
     })
-}
+  },
+  removeBatchData(ids){
+    return request({
+      url: `${API}/batchRemove`,
+      method: 'delete',
+      data: ids
+    })
+  }
 }
