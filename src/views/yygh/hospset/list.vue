@@ -13,8 +13,11 @@
       <el-button type="primary" icon="el-icon-search" @click="fetchData()">查询</el-button>
       <el-button type="default" @click="resetData()">清空</el-button>
     </el-form>
+
     <!-- 表格渲染 -->
-    <el-table v-loading="listLoading" :data="list" element-loading-text="数据加载中" border fit highlight-current-row>
+    <el-table v-loading="listLoading" :data="list" element-loading-text="数据加载中" border fit highlight-current-row
+      @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" />
 
       <el-table-column label="序号" width="70" align="center">
         <template slot-scope="scope">
@@ -30,15 +33,9 @@
 
       <el-table-column prop="contactsName" label="联系人" />
 
-      <el-table-column prop="status" label="状态">
-        <template slot-scope="scope">
-          {{ scope.row.status === 1 ? '可用' : '不可用' }}
-        </template>
-      </el-table-column>
-
       <el-table-column prop="contactsPhone" label="联系人电话" />
 
-      
+
 
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
@@ -50,7 +47,8 @@
         </template>
       </el-table-column>
     </el-table>
-
+    <!-- 工具条 -->
+    <el-button type="danger" size="mini" @click="removeRows()">批量删除</el-button>
 
     <!-- 分页 -->
     <el-pagination :current-page="page" :page-size="limit" :total="total" style="padding: 30px 0; text-align: center;"
@@ -70,13 +68,47 @@ export default {
       total: 0, // 总记录数
       page: 1, // 页码
       limit: 5, // 每页记录数
-      searchObj: {}// 查询条件
+      searchObj: {},// 查询条件
+      multipleSelection: [] //批量选择中选择的记录列表
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
+    //批量删除
+    removeRows() {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var ids = []
+        for (var i = 0; i < this.multipleSelection.length; i++) {
+          var obj = this.multipleSelection[i]
+          var id = obj.id
+          ids.push(id)
+        }
+        hospitalset.removeBatchData(ids).then(response => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.fetchData()
+        })
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    //处理批量删除的选择框
+    handleSelectionChange(selection) {
+      console.log(selection)
+      this.multipleSelection = selection
+    },
     fetchData(page = 1) {
       console.log('加载列表')
       this.page = page
@@ -101,24 +133,24 @@ export default {
       }).then(() => {
         return hospitalset.removeDataById(id)
       }).then(() => {
-          this.fetchData()
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch((response) => {
-          if (response === 'cancel') {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '删除失败'
-            });
-          }
+        this.fetchData()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
         });
+      }).catch((response) => {
+        if (response === 'cancel') {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        } else {
+          this.$message({
+            type: 'error',
+            message: '删除失败'
+          });
+        }
+      });
     }
 
   }
