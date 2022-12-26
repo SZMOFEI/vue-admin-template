@@ -13,11 +13,27 @@
     </el-table>
 
     <div class="el-toolbar">
-    <div class="el-toolbar-body" style="justify-content: flex-start;">
-    	<el-button type="text" @click="exportData"><i class="fa fa-plus"/> 导出</el-button>
-    </div>
+      <div class="el-toolbar-body" style="justify-content: flex-start;">
+        <el-button type="text" @click="exportData"><i class="fa fa-plus" /> 导出</el-button>
+        <el-button type="text" @click="importData"><i class="fa fa-plus" /> 导入</el-button>
+      </div>
 
-</div>
+      <el-dialog title="导入" :visible.sync="dialogImportVisible" width="480px">
+        <el-form label-position="right" label-width="170px">
+          <el-form-item label="文件">
+            <!-- multiple 代表可以上传多个文件 -->
+            <el-upload :multiple="false" :on-success="onUploadSuccess"
+              :action="'http://nginx.yygh.com:9001/admin/cmn/dict/upload'" class="upload-demo">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传xls文件，且不超过500kb</div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogImportVisible = false">取消</el-button>
+        </div>
+      </el-dialog>
+    </div>
 
   </div>
 
@@ -30,22 +46,36 @@ import { DatePicker } from 'element-ui'
 export default {
   data() {
     return {
-      dictList: []
+      dictList: [],
+      dialogImportVisible: false
     }
   },
   created() {
-    cmn.findChildData(1).then(response => {
-      this.dictList = response.data.items
-      // console.log(this.dictList)
-    }).catch(() => {
-      this.$message({
-        type: 'error',
-        message: '加载数据失败'
-      });
-    })
+   this.fetchData()
   },
   methods: {
-    exportData(){
+    //文件上传成功回调
+    onUploadSuccess(response, file) {
+      this.$message.info('上传成功')
+      this.dialogImportVisible = false
+      this.fetchData()
+    },
+    fetchData() {
+      cmn.findChildData(1).then(response => {
+        this.dictList = response.data.items
+        // console.log(this.dictList)
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '加载数据失败'
+        });
+      })
+    },
+    //文件上传
+    importData() {
+      this.dialogImportVisible = true
+    },
+    exportData() {
       //这里的地址应该写成 nginx 的服务器地址
       window.open('http://nginx.yygh.com:9001/admin/cmn/dict/download')
     },
