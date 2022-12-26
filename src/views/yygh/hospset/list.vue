@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">医院设置列表
+  <div class="app-container">
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
@@ -126,7 +126,7 @@ export default {
       this.multipleSelection = selection
     },
     fetchData(page = 1) {
-      console.log('加载列表')
+      // console.log('加载列表')
       this.page = page
       this.listLoading = true
       hospitalset.getHospitalSetPage(this.page, this.limit, this.searchObj).then(response => {
