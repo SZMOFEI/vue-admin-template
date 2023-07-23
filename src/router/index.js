@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '预约挂号平台后台管理系统', icon: 'dashboard' }
+      meta: { title: 'Appointment registration platform backend Manage System', icon: 'dashboard' }
     }]
   },
   // 医院设置管理
@@ -60,13 +60,13 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/yygh/hospset/list',
     name: 'Teacher',
-    meta: { title: '医院管理', icon: 'el-icon-s-help' },
+    meta: { title: 'Hospital Manage', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'list',
         name: 'HospSetList',
         component: () => import('@/views/yygh/hospset/list'),
-        meta: { title: '医院设置列表', icon: 'table' }
+        meta: { title: 'Hospital Setting List', icon: 'table' }
       },
 
 
@@ -74,13 +74,13 @@ export const constantRoutes = [
         path: 'create',
         name: 'HospSetCreate',
         component: () => import('@/views/yygh/hospset/form'),
-        meta: { title: '添加医院设置', icon: 'tree' }
+        meta: { title: 'Add Hospital Setting', icon: 'tree' }
       },
       {
         path: 'edit/:id',
         name: 'HospSetEdit',
         component: () => import('@/views/yygh/hospset/form'),
-        meta: { title: '编辑医院设置', noCache: true },
+        meta: { title: 'Edit Hospital Setting', noCache: true },
         hidden: true
       }
     ]
